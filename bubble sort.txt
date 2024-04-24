@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+
+using namespace std;
+
+void parallelBubbleSort(vector<int>& arr) {
+    int n = arr.size();
+    bool swapped;
+
+    #pragma omp parallel
+    {
+        do {
+            swapped = false;
+
+            #pragma omp for
+            for (int i = 1; i < n; ++i) {
+                if (arr[i - 1] > arr[i]) {
+                    swap(arr[i - 1], arr[i]);
+                    swapped = true;
+                }
+            }
+        } while (swapped);
+    }
+}
+
+int main() {
+    vector<int> arr = {5, 2, 9, 1, 5, 6};
+    
+    cout << "Original Array:";
+    for (int num : arr) {
+        cout << " " << num;
+    }
+    cout << endl;
+
+    parallelBubbleSort(arr);
+
+    cout << "Sorted Array:";
+    for (int num : arr) {
+        cout << " " << num;
+    }
+    cout << endl;
+
+    return 0;
+}
